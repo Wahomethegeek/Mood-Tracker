@@ -9,9 +9,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import com.example.moodtracker.ui.theme.MoodTrackerTheme
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @OptIn(ExperimentalMaterial3Api::class)
 class MainActivity : ComponentActivity() {
+    private val auth by lazy {
+        Firebase.auth
+    }
+    companion object {
+        val TAG : String = MainActivity::class.java.simpleName
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -23,12 +31,8 @@ class MainActivity : ComponentActivity() {
                 ) {
                     //Log in page
                     LoginScreen(onLoginClick =  {
-                        email, password ->
-                    },
-                        onSignUpClick = {
-
-
-                })
+                        email, password, auth -> },
+                        onSignUpClick = {auth})
 
             }
         }
