@@ -3,8 +3,12 @@ package com.example.moodtracker
 import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Visibility
+import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -12,10 +16,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -61,12 +71,14 @@ fun LoginScreen(
                 onNext = {focusManager.moveFocus(FocusDirection.Down)}
             )
         )
-
+var passwordVisibility: Boolean by remember {
+    mutableStateOf(false)
+}
         OutlinedTextField(
             value = password,
             onValueChange = { password = it },
             label = { Text(text = "Password") },
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = if (passwordVisibility) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Password,
                 imeAction = ImeAction.Done
@@ -76,7 +88,23 @@ fun LoginScreen(
                 .fillMaxWidth(),
             keyboardActions = KeyboardActions(
                 onDone = {focusManager.clearFocus()}
-            )
+            ),
+            trailingIcon = {
+                IconButton(onClick = {
+                    passwordVisibility = !passwordVisibility
+                }) {
+                    Icon(
+                        imageVector = if (passwordVisibility){
+                            Icons.Default.VisibilityOff
+                        }
+                    else{
+                        Icons.Default.Visibility
+                    },
+                        contentDescription = "visibility",
+                    tint = Color.Gray
+                    )
+                }
+            }
         )
         Row(
             horizontalArrangement = Arrangement.Start,
@@ -110,15 +138,24 @@ fun LoginScreen(
             Text(text = "Log In")
         }
 
-        TextButton(
-            onClick = onSignUpClick,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Text(text = "Don't have an account? Sign up here")
-        }
+        ClickableText(
+            modifier = Modifier.padding(16.dp),
+            text = buildAnnotatedString {
+                append("Don't have an account, ")
+                withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
+                    append("Sign up")
+                }
+            },
+            onClick = {
+                onSignUpClick
+            },
+            style = MaterialTheme.typography.bodyMedium.copy(color = colorResource(id = R.color.purple_500))
+        )
     }
 
 }
+
+
 
 
 
