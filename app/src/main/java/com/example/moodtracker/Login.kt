@@ -95,10 +95,10 @@ var passwordVisibility: Boolean by remember {
                 }) {
                     Icon(
                         imageVector = if (passwordVisibility){
-                            Icons.Default.VisibilityOff
+                            Icons.Default.Visibility
                         }
                     else{
-                        Icons.Default.Visibility
+                        Icons.Default.VisibilityOff
                     },
                         contentDescription = "visibility",
                     tint = Color.Gray

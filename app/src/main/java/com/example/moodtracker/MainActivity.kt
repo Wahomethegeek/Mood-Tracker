@@ -33,6 +33,8 @@ class MainActivity : ComponentActivity() {
                     LoginScreen(onLoginClick =  {
                         email, password, auth -> },
                         onSignUpClick = {auth})
+                /*    RegistrationPage(onSignupClick){}*/
+
 
             }
         }
