@@ -6,8 +6,10 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.example.moodtracker.ui.theme.MoodTrackerTheme
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -30,14 +32,21 @@ class MainActivity : ComponentActivity() {
                     color = colorResource(id = R.color.background_color)
                 ) {
                     //Log in page
-                    LoginScreen(onLoginClick =  {
+                    /*LoginScreen(onLoginClick =  {
                         email, password, auth -> },
-                        onSignUpClick = {auth})
+                        onSignUpClick = {auth})*/
                 /*    RegistrationPage(onSignupClick){}*/
+                    RegistrationScreen()
 
 
             }
         }
     }
 }
+}
+@OptIn(ExperimentalMaterial3Api::class)
+@Preview
+@Composable
+fun RegistrationPagePreview(){
+    RegistrationScreen()
 }

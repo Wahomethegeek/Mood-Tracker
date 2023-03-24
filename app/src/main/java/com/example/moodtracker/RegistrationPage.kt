@@ -51,9 +51,9 @@ fun RegistrationScreen() {
 
     ) {
         Text(
-            text = "Register you Mood Tracker",
+            text = "Register Mood Tracker",
             style = MaterialTheme.typography.headlineMedium,
-            modifier = Modifier.padding(16.dp)
+            modifier = Modifier.padding(15.dp)
         )
 
         OutlinedTextField(
@@ -112,6 +112,13 @@ fun RegistrationScreen() {
                 }
                 password.value = it
             },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {focusManager.moveFocus(FocusDirection.Down)}
+            ),
             modifier = Modifier.fillMaxWidth(),
             label = {
                 Text(text = "Password")
@@ -138,8 +145,49 @@ fun RegistrationScreen() {
             }
         )
         if (passwordErrorState.value) {
-            Text(text = "Required", color = Color.Gray, fontStyle = FontStyle.Italic)
+            Text(text = "Required", color = Color.Red, fontStyle = FontStyle.Italic)
         }
+
+        val cPasswordVisibility = remember { mutableStateOf(true) }
+        OutlinedTextField(
+            value = confirmPassword.value,
+            onValueChange = {
+                if (confirmPasswordErrorState.value){
+                    confirmPasswordErrorState.value = false
+                }
+                confirmPassword.value = it
+            },
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Password,
+                imeAction = ImeAction.Next
+            ),
+            keyboardActions = KeyboardActions(
+                onNext = {focusManager.moveFocus(FocusDirection.Down)}
+            ),
+            modifier = Modifier.fillMaxWidth(),
+           isError = confirmPasswordErrorState.value,
+            label = {
+                Text(text = "Confirm Password")
+            },
+            trailingIcon = {
+                IconButton(onClick = {
+                    cPasswordVisibility.value = !cPasswordVisibility.value
+
+                }) {
+                    Icon(
+                        imageVector = if (cPasswordVisibility.value) {
+                            Icons.Default.VisibilityOff
+                        }
+                    else{
+                        Icons.Default.Visibility
+                        },
+                        contentDescription = "visibility",
+                        tint = Color.Gray
+
+                    )
+                }
+            }
+        )
 
 
 
