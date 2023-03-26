@@ -1,5 +1,6 @@
 package com.example.moodtracker
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
@@ -18,15 +19,17 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.input.*
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 
 
 @ExperimentalMaterial3Api
 @Composable
 
-fun RegistrationScreen() {
+fun RegistrationScreen(navController: NavController) {
     val context = LocalContext.current
     val name = remember { mutableStateOf(TextFieldValue()) }
     val email = remember { mutableStateOf(TextFieldValue()) }
@@ -186,8 +189,72 @@ fun RegistrationScreen() {
 
                     )
                 }
+            },
+            visualTransformation = if (cPasswordVisibility.value){
+                PasswordVisualTransformation()
+            }
+        else {
+            VisualTransformation.None
             }
         )
+        if (confirmPasswordErrorState.value){
+            val msg = if (confirmPassword.value.text.isEmpty()){
+                "Required"
+            }else if (confirmPassword.value.text != password.value.text){
+                "Password not matching"
+            }else {
+                ""
+            }
+            Text(text = msg, color = Color.Red, fontStyle = FontStyle.Italic)
+        }
+        Spacer(Modifier.size(16.dp))
+        Button(onClick = {
+            when {
+                name.value.text.isEmpty() -> {
+                    nameErrorState.value = true
+                }
+                email.value.text.isEmpty() -> {
+                    emailErrorState.value = true
+                }
+                password.value.text.isEmpty() -> {
+                    passwordErrorState.value = true
+                }
+                confirmPassword.value.text.isEmpty() -> {
+                    confirmPasswordErrorState.value = true
+                }
+                else -> {
+                    Toast.makeText(
+                        context,
+                        "Registered successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    navController.navigate("login_screen"){
+                        popUpTo(navController.graph.startDestinationId)
+                        launchSingleTop = true
+                    }
+                }
+            }
+        },
+            content = {
+                Text(text = "Register")
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            colors = ButtonDefaults.buttonColors(colorResource(id = R.color.purple_500))
+        )
+        Spacer(Modifier.size(16.dp))
+        Row(modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center) {
+            TextButton(onClick = {
+                navController.navigate("login_screen"){
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+            }) {
+                Text(text = "Login")
+            }
+        }
 
 
 

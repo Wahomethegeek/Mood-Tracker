@@ -27,6 +27,7 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -36,14 +37,14 @@ import com.google.firebase.ktx.Firebase
 @Composable
 fun LoginScreen(
     onLoginClick: (String, String, auth: FirebaseAuth) -> Unit,
-    onSignUpClick: () -> Unit
+    onSignUpClick: () -> Unit,
+    navController: NavController
 ) {
-
-    val auth by lazy {
-        Firebase.auth
-    }
+    val auth by lazy { Firebase.auth }
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
+    var emailErrorState = remember { mutableStateOf(false) }
+    var passwordErrorState = remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -71,6 +72,9 @@ fun LoginScreen(
                 onNext = {focusManager.moveFocus(FocusDirection.Down)}
             )
         )
+        if (emailErrorState.value){
+            Text(text = "Required", color = Color.Red, fontStyle = FontStyle.Italic)
+        }
 var passwordVisibility: Boolean by remember {
     mutableStateOf(false)
 }
@@ -106,6 +110,9 @@ var passwordVisibility: Boolean by remember {
                 }
             }
         )
+        if (passwordErrorState.value){
+            Text(text = "Required", color = Color.Red, fontStyle = FontStyle.Italic)
+        }
         Row(
             horizontalArrangement = Arrangement.Start,
             modifier = Modifier.fillMaxWidth()
@@ -129,8 +136,12 @@ var passwordVisibility: Boolean by remember {
                     } else {
                         Log.d(TAG, "The user has failed to log in", it.exception)
                     }
-
-                }},
+                }
+                navController.navigate("login_screen"){
+                    popUpTo(navController.graph.startDestinationId)
+                    launchSingleTop = true
+                }
+                      },
             modifier = Modifier
                 .padding(16.dp)
                 .fillMaxWidth()
@@ -147,7 +158,10 @@ var passwordVisibility: Boolean by remember {
                 }
             },
             onClick = {
-                onSignUpClick
+                      navController.navigate("register_screen"){
+                          popUpTo(navController.graph.startDestinationId)
+                          launchSingleTop = true
+                      }
             },
             style = MaterialTheme.typography.bodyMedium.copy(color = colorResource(id = R.color.purple_500))
         )

@@ -6,6 +6,7 @@
 - Display the list of contributors in a list.
 - I initiated the databse with firebase where the user can be able to log in
 ## Progress
-- Adding the Sign up page 
+- Adding the Sign up page
+- I added the navigation control if the user doesn't doesn't have an accout he can be able to sign up 
 ## License
 This projecct is licensed under the terms of the [MIT License](License.md)
